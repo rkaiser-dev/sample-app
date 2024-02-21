@@ -1,0 +1,6 @@
+.vscode
+.env
+*.tsbuildinfo
+node_modules
+generated
+build

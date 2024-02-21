@@ -1,0 +1,15 @@
+{
+  "name": "@sample/utils",
+  "version": "1.0.0",
+  "description": "Sample package containing some utility functions",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc --build"
+  },
+  "keywords": [],
+  "author": "Ryan Kaiser",
+  "license": "MIT",
+  "dependencies": {
+    "@sample/utils": "^1.0.0"
+  }
+}
