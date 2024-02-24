@@ -3,11 +3,20 @@
   "version": "1.0.0",
   "description": "Sample package containing UI",
   "main": "index.js",
-  "type": "commonjs",
   "scripts": {
-    "build": "tsc --build"
+    "dev:watch": "vite dev --port 3007 --host",
+    "build": "vite build",
+    "start": "vite preview"
   },
   "keywords": [],
   "author": "Ryan Kaiser",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "vue": "^3.4.19"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.0.4",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.4"
+  }
 }

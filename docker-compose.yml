@@ -1,0 +1,38 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./packages/api/Dockerfile
+    command: npm run dev:watch
+    container_name: sample-app-api
+    develop:
+      watch:
+        - path: ./packages/api/src
+          action: sync
+          target: /app/api/src
+          ignore: 
+            - /app/api/node_modules/
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+  ui:
+    build:
+      context: .
+      dockerfile: ./packages/ui/Dockerfile
+    command: npm run dev:watch
+    container_name: sample-app-ui
+    develop:
+      watch:
+        - path: ./packages/ui/src
+          action: sync
+          target: /app/ui/src
+          ignore: 
+            - /app/ui/node_modules/
+    networks:
+      - frontend
+    ports:
+      - "3007:3007"
+networks:
+  frontend:
+  backend:

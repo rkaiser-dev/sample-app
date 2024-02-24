@@ -7,10 +7,11 @@
     "strict": true,
     "incremental": true,
     "esModuleInterop": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
     "forceConsistentCasingInFileNames": true,
     "rootDir": "./src",
-    "outDir": "./build",
+    "outDir": "./dist",
     "composite": true
   }
 }
