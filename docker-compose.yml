@@ -3,8 +3,10 @@ services:
     build:
       context: .
       dockerfile: ./packages/api/Dockerfile
-    command: npm run dev:watch
+    command: sh -c "npx prisma migrate deploy && npm run dev:watch"
     container_name: sample-app-api
+    depends_on:
+      - postgres
     develop:
       watch:
         - path: ./packages/api/src
@@ -16,6 +18,11 @@ services:
       - backend
     ports:
       - "3000:3000"
+    environment:
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/devdb?schema=core'
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "devdb"
   ui:
     build:
       context: .
@@ -33,6 +40,28 @@ services:
       - frontend
     ports:
       - "3007:3007"
+  postgres:
+    image: postgres:16.2-alpine
+    container_name: postgres-db
+    restart: always
+    shm_size: 128mb
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "devdb"
+    healthcheck:
+      test: ["CMD", "psql", "--username=postgres", "--dbname=devdb"]
+      interval: 2s
+      timeout: 30s
+      retries: 10
+    volumes:
+      - db-data:/var/lib/postgresql/data
 networks:
   frontend:
   backend:
+volumes:
+  db-data:
