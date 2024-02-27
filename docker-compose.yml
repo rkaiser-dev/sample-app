@@ -1,0 +1,67 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: ./packages/api/Dockerfile
+    command: sh -c "npx prisma migrate deploy && npm run dev:watch"
+    container_name: sample-app-api
+    depends_on:
+      - postgres
+    develop:
+      watch:
+        - path: ./packages/api/src
+          action: sync
+          target: /app/api/src
+          ignore: 
+            - /app/api/node_modules/
+    networks:
+      - backend
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_URL: 'postgresql://postgres:postgres@postgres:5432/devdb?schema=core'
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "devdb"
+  ui:
+    build:
+      context: .
+      dockerfile: ./packages/ui/Dockerfile
+    command: npm run dev:watch
+    container_name: sample-app-ui
+    develop:
+      watch:
+        - path: ./packages/ui/src
+          action: sync
+          target: /app/ui/src
+          ignore: 
+            - /app/ui/node_modules/
+    networks:
+      - frontend
+    ports:
+      - "3007:3007"
+  postgres:
+    image: postgres:16.2-alpine
+    container_name: postgres-db
+    restart: always
+    shm_size: 128mb
+    networks:
+      - backend
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "devdb"
+    healthcheck:
+      test: ["CMD", "psql", "--username=postgres", "--dbname=devdb"]
+      interval: 2s
+      timeout: 30s
+      retries: 10
+    volumes:
+      - db-data:/var/lib/postgresql/data
+networks:
+  frontend:
+  backend:
+volumes:
+  db-data:
